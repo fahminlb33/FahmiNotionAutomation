@@ -48,13 +48,28 @@
         async function load_all() {
             const fetchResult = await fetch("/api/data");
             const data = await fetchResult.json();
+
+            // statistics
             const layout = { barmode: 'group' };
-
-            data.latestStatistics[0].textinfo = "label+percent";
-
             Plotly.newPlot('tasks', data.statistics, layout);
-            Plotly.newPlot('commitmentMA', data.performances);
+
+            // latest task stats
+            data.latestStatistics[0].textinfo = "label+percent";
             Plotly.newPlot('latestStats', data.latestStatistics);
+
+            // performances
+            data.performances[1].yaxis = "y2";
+            const perf_layout = {
+                yaxis: { title: 'Comitment' },
+                yaxis2: {
+                    title: 'Change (%)',
+                    titlefont: { color: 'rgb(148, 103, 189)' },
+                    tickfont: { color: 'rgb(148, 103, 189)' },
+                    overlaying: 'y',
+                    side: 'right'
+                }
+            };
+            Plotly.newPlot('commitmentMA', data.performances, perf_layout);
         }
 
         load_all();

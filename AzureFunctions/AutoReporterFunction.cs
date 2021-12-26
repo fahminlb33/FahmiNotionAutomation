@@ -31,7 +31,7 @@ namespace FahmiNotionAutomation
 
             var htmlPath = Path.Combine(context.FunctionAppDirectory, "graph.html");
             log.LogInformation(htmlPath);
-                        
+
             log.LogInformation("Dashboard page loaded");
             return new ContentResult()
             {
@@ -49,21 +49,22 @@ namespace FahmiNotionAutomation
             var performanceChartData = new List<ChartPointDto>();
             if (performances != null)
             {
+                performances = performances.OrderBy(x => x.CurrentPeriod);
                 performanceChartData = new List<ChartPointDto>
                 {
-                    new ChartPointDto
-                    {
-                        Type = "scatter",
-                        Name = "2-Day MA",
-                        XData = performances.Select(x => x.CurrentPeriod).ToList(),
-                        YData = performances.Select(x => x.Commitment).ToList(),
-                    },
                     new ChartPointDto
                     {
                         Type = "bar",
                         Name = "Commitment",
                         XData = performances.Select(x => x.CurrentPeriod).ToList(),
-                        YData = performances.Select(x => Convert.ToDouble(x.CommitmentChange)).ToList(),
+                        YData = performances.Select(x => x.Commitment).ToList(),
+                    },
+                    new ChartPointDto
+                    {
+                        Type = "scatter",
+                        Name = "Change (%)",
+                        XData = performances.Select(x => x.CurrentPeriod).ToList(),
+                        YData = performances.Select(x => x.CommitmentChange).ToList(),
                     },
                 };
             }
@@ -73,6 +74,7 @@ namespace FahmiNotionAutomation
             var latestStatisticsChartData = new List<PieChartPointDto>();
             if (statistics != null)
             {
+                statistics = statistics.OrderBy(x => x.Period);
                 statisticsChartData = new List<ChartPointDto>
                 {
                     new ChartPointDto
