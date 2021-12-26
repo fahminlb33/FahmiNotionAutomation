@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace FahmiNotionAutomation.Services
+namespace FahmiNotionAutomation.Infrastructure.Notion
 {
-    public record NotionCard
+    public class NotionCard
     {
         public string Id { get; set; }
         public string Title { get; set; }

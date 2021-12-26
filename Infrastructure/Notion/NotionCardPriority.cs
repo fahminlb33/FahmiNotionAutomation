@@ -1,4 +1,4 @@
-﻿namespace FahmiNotionAutomation.Services
+﻿namespace FahmiNotionAutomation.Infrastructure.Notion
 {
     public enum NotionCardPriority
     {

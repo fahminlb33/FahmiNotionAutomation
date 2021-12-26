@@ -1,9 +1,12 @@
 ﻿using dotenv.net;
+using FahmiNotionAutomation.Domain;
 using FahmiNotionAutomation.Infrastructure;
-using FahmiNotionAutomation.Services;
+using FahmiNotionAutomation.Infrastructure.Mongo;
+using FahmiNotionAutomation.Infrastructure.Notion;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
+using System.Reflection;
 
 [assembly: FunctionsStartup(typeof(FahmiNotionAutomation.AzureFunctions.Startup))]
 namespace FahmiNotionAutomation.AzureFunctions
@@ -15,11 +18,14 @@ namespace FahmiNotionAutomation.AzureFunctions
             DotEnv.Load();
             var config = new Config();
 
+            builder.Services.AddLogging();
             builder.Services.AddHttpClient();
+            builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
             builder.Services.AddSingleton(config);
-            builder.Services.AddTransient<INotionService, NotionService>();
-            builder.Services.AddTransient<IKanbanService, KanbanService>();
-            builder.Services.AddTransient<IMongoStoreService, MongoStoreService>();
+            builder.Services.AddScoped<INotionService, NotionService>();
+            builder.Services.AddScoped<IMongoStoreService, MongoStoreService>();
+            builder.Services.AddScoped<IAutoReporterDomain, AutoReporterDomain>();
             builder.Services.AddSingleton<IMongoClient>(new MongoClient(config.MongoUri));
         }
     }

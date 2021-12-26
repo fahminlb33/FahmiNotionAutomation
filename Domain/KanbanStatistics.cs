@@ -1,10 +1,11 @@
-﻿using MongoDB.Bson;
+﻿using FahmiNotionAutomation.Infrastructure.Mongo;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 
-namespace FahmiNotionAutomation.Services
+namespace FahmiNotionAutomation.Domain
 {
-    public record KanbanStatistics
+    public record KanbanStatistics : IMongoData
     {
         [BsonId]
         public ObjectId Id { get; set; }
@@ -18,5 +19,6 @@ namespace FahmiNotionAutomation.Services
         public int Commitment { get; set; }
         public int Burned { get; set; }
         public int RemainingCommitment => Commitment - Burned;
+        public DateTime CreatedAt { get; set; }
     }
 }

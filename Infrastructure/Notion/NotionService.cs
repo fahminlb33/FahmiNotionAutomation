@@ -10,7 +10,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FahmiNotionAutomation.Services
+namespace FahmiNotionAutomation.Infrastructure.Notion
 {
     public interface INotionService
     {
@@ -22,9 +22,9 @@ namespace FahmiNotionAutomation.Services
     {
         private readonly Config _config;
         private readonly HttpClient _httpClient;
-        private readonly ILogger _logger;
+        private readonly ILogger<INotionService> _logger;
 
-        public NotionService(Config config, HttpClient httpClient, ILogger logger)
+        public NotionService(Config config, HttpClient httpClient, ILogger<INotionService> logger)
         {
             _config = config;
             _httpClient = httpClient;
