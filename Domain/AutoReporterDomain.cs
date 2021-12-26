@@ -38,10 +38,11 @@ namespace FahmiNotionAutomation.Domain
         public async Task ReportAsync()
         {
             _log.LogInformation("Loading Notion data...");
+            var currentPeriod = DateTime.Now - TimeSpan.FromDays(1);
             var unarchivedCards = await _notion.GetUnarchivedTasks();
 
             var kanbanUnarchivedCards = _mapper.ProjectTo<KanbanCard>(unarchivedCards.AsQueryable()).ToList();
-            var statistics = GetStatistics(kanbanUnarchivedCards);
+            var statistics = GetStatistics(kanbanUnarchivedCards, currentPeriod);
 
             _log.LogInformation("Storing tasks...");
             await _mongo.StoreMany(kanbanUnarchivedCards, MongoCollectionTasks);
@@ -50,7 +51,7 @@ namespace FahmiNotionAutomation.Domain
             if (latestPerformance != null)
             {
                 _log.LogInformation("Calculating performance...");
-                var performance = GetPerformance(latestPerformance, statistics);
+                var performance = GetPerformance(latestPerformance, statistics, currentPeriod);
 
                 _log.LogInformation("Storing performance to MongoDB...");
                 await _mongo.Store(performance, MongoCollectionPerformance);
@@ -73,12 +74,12 @@ namespace FahmiNotionAutomation.Domain
             return await _mongo.GetAll<KanbanPerformance>(MongoCollectionPerformance);
         }
 
-        private KanbanStatistics GetStatistics(IEnumerable<KanbanCard> cards)
+        private KanbanStatistics GetStatistics(IEnumerable<KanbanCard> cards, DateTime period)
         {
             return new KanbanStatistics
             {
-                Period = DateTime.Now,
-                CreatedAt = DateTime.Now,
+                Period = period,
+                CreatedAt = period,
                 Backlog = cards.Where(x => x.Status == NotionCardStatus.Backlog).Sum(x => x.StoryPoints),
                 Triage = cards.Where(x => x.Status == NotionCardStatus.Triage).Sum(x => x.StoryPoints),
                 Todo = cards.Where(x => x.Status == NotionCardStatus.Todo).Sum(x => x.StoryPoints),
@@ -97,11 +98,11 @@ namespace FahmiNotionAutomation.Domain
             };
         }
 
-        private KanbanPerformance GetPerformance(KanbanStatistics previousPeriod, KanbanStatistics currentPeriod)
+        private KanbanPerformance GetPerformance(KanbanStatistics previousPeriod, KanbanStatistics currentPeriod, DateTime period)
         {
             return new KanbanPerformance
             {
-                CreatedAt = DateTime.Now,
+                CreatedAt = period,
                 PreviousPeriod = previousPeriod,
                 CurrentPeriod = currentPeriod,
                 CommitmentMovingAverage = (previousPeriod.Commitment + currentPeriod.Commitment) * 0.5,
