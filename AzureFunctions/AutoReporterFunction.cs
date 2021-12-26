@@ -25,20 +25,19 @@ namespace FahmiNotionAutomation
         }
 
         [FunctionName("ServeDashboardHtml")]
-        public Task<HttpResponseMessage> ServeDashboardHtml([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "dashboard")] HttpRequest req, ILogger log, ExecutionContext context)
+        public async Task<IActionResult> ServeDashboardHtml([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "dashboard")] HttpRequest req, ILogger log, ExecutionContext context)
         {
             log.LogInformation("Dashboard page requested");
 
             var htmlPath = Path.Combine(context.FunctionAppDirectory, "graph.html");
             log.LogInformation(htmlPath);
-
-            var response = new HttpResponseMessage(HttpStatusCode.OK);
-            using var stream = new FileStream(htmlPath, FileMode.Open);
-            response.Content = new StreamContent(stream);
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
-            
+                        
             log.LogInformation("Dashboard page loaded");
-            return Task.FromResult(response);
+            return new ContentResult()
+            {
+                Content = File.ReadAllText(htmlPath),
+                ContentType = "text/html",
+            };
         }
 
         [FunctionName("ServeDashboardData")]
