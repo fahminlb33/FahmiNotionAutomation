@@ -30,7 +30,7 @@ namespace FahmiNotionAutomation
             log.LogInformation("Dashboard page requested");
 
             var htmlPath = Path.Combine(context.FunctionAppDirectory, "graph.html");
-            log.LogDebug(htmlPath);
+            log.LogInformation(htmlPath);
 
             var response = new HttpResponseMessage(HttpStatusCode.OK);
             using var stream = new FileStream(htmlPath, FileMode.Open);
