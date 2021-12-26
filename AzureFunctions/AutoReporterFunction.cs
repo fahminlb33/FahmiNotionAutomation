@@ -29,8 +29,11 @@ namespace FahmiNotionAutomation
         {
             log.LogInformation("Dashboard page requested");
 
+            var htmlPath = Path.Combine(context.FunctionAppDirectory, "graph.html");
+            log.LogDebug(htmlPath);
+
             var response = new HttpResponseMessage(HttpStatusCode.OK);
-            using var stream = new FileStream(Path.Combine(context.FunctionAppDirectory, "graph.html"), FileMode.Open);
+            using var stream = new FileStream(htmlPath, FileMode.Open);
             response.Content = new StreamContent(stream);
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
 
