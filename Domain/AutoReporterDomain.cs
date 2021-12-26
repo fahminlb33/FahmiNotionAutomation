@@ -103,10 +103,16 @@ namespace FahmiNotionAutomation.Domain
             return new KanbanPerformance
             {
                 CreatedAt = period,
-                PreviousPeriod = previousPeriod,
-                CurrentPeriod = currentPeriod,
-                CommitmentMovingAverage = (previousPeriod.Commitment + currentPeriod.Commitment) * 0.5,
-                BurnedMovingAverage = (previousPeriod.Burned + currentPeriod.Burned) * 0.5,
+                PreviousPeriod = previousPeriod.Period,
+                CurrentPeriod = currentPeriod.Period,
+                
+                Commitment = currentPeriod.Commitment,
+                CommitmentChange = (currentPeriod.Commitment - previousPeriod.Commitment) / (double) previousPeriod.Commitment * 100.0,
+                CommitmentMovingAverage = (currentPeriod.Commitment + previousPeriod.Commitment) * 0.5,
+                
+                Burned = currentPeriod.Burned,
+                BurnedChange = (currentPeriod.Burned - previousPeriod.Burned) / (double)previousPeriod.Burned * 100.0,
+                BurnedMovingAverage = (currentPeriod.Burned + previousPeriod.Burned) * 0.5,
             };
         }
     }

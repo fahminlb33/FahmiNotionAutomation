@@ -55,15 +55,15 @@ namespace FahmiNotionAutomation
                     {
                         Type = "scatter",
                         Name = "2-Day MA",
-                        XData = performances.Select(x => x.CurrentPeriod.Period).ToList(),
-                        YData = performances.Select(x => x.CommitmentMovingAverage).ToList(),
+                        XData = performances.Select(x => x.CurrentPeriod).ToList(),
+                        YData = performances.Select(x => x.Commitment).ToList(),
                     },
                     new ChartPointDto
                     {
                         Type = "bar",
                         Name = "Commitment",
-                        XData = performances.Select(x => x.CurrentPeriod.Period).ToList(),
-                        YData = performances.Select(x => Convert.ToDouble(x.CurrentPeriod.Commitment)).ToList(),
+                        XData = performances.Select(x => x.CurrentPeriod).ToList(),
+                        YData = performances.Select(x => Convert.ToDouble(x.CommitmentChange)).ToList(),
                     },
                 };
             }
