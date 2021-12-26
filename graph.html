@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Notion+MongoDB</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <script src="https://cdn.plot.ly/plotly-2.8.3.min.js"></script>
+
+    <style>
+        .my-chart {
+            height: 500px
+        }
+
+        .my-chart-container {
+            height: 560px
+        }
+    </style>
+</head>
+<body>
+    <section class="section has-background-primary">
+        <div class="container">
+            <h1 class="title">
+                Notion+MongoDB
+            </h1>
+            <p class="subtitle">
+                Notion Kanban <strong>Dashboard</strong>!
+            </p>
+
+            <div class="box my-chart-container">
+                <h4 class="title is-4 mb-0">Tasks Summary</h4>
+                <div id="latestStats" class="my-chart"></div>
+            </div>
+            <div class="box my-chart-container">
+                <h4 class="title is-4 mb-0">Monthly Commitment</h4>
+                <div id="commitmentMA" class="my-chart"></div>
+            </div>
+            <div class="box my-chart-container">
+                <h4 class="title is-4 mb-0">Monthly Tasks</h4>
+                <div id="tasks" class="my-chart"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        async function load_all() {
+            const fetchResult = await fetch("/api/data");
+            const data = await fetchResult.json();
+            const layout = { barmode: 'group' };
+
+            data.latestStatistics[0].textinfo = "label+percent";
+
+            Plotly.newPlot('tasks', data.statistics, layout);
+            Plotly.newPlot('commitmentMA', data.performances);
+            Plotly.newPlot('latestStats', data.latestStatistics);
+        }
+
+        load_all();
+    </script>
+</body>
+</html>

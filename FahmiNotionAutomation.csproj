@@ -17,6 +17,9 @@
     <None Update=".env">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="graph.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="g_service_account.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
